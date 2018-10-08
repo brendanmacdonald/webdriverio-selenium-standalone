@@ -6,11 +6,11 @@ const password = 'SuperSecretPassword!'
 
 describe('The Internet', () => {
     it('form authentication without Page Objects', () => {
-        browser.url('/login');
-        browser.setValue('input#username', username);
-        browser.setValue('input#password', password);
-        browser.click('form#login i');
-        browser.getTitle().should.be.equal('The Internet');
+        browser.url('/login')
+            .setValue('input#username', username)
+            .setValue('input#password', password)
+            .click('form#login i')
+            .getTitle().should.be.equal('The Internet');
         browser.isVisible('div#flash');
         browser.getText('div#flash').should.contain('You logged into a secure area!');
         browser.click('div#content a > i');
