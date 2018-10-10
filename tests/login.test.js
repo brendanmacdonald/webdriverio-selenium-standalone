@@ -70,19 +70,21 @@ describe('The Internet website - ', () => {
 
         var rackSessionCookie = '';
         LoginPage.open();
-        browser.deleteCookie('rack.session');
+
+        var initialRackSessionCookie = browser.getCookie('rack.session');
 
         browser.call(() => {
             return chai.request('https://the-internet.herokuapp.com')
                 .post('/authenticate')
                 .set('content-type', 'application/x-www-form-urlencoded')
+                .set('Cookie', 'rack.session=' + initialRackSessionCookie.value)
                 .send({
                     username: 'tomsmith',
                     password: 'SuperSecretPassword!'
                 })
                 .then((res) => {
                     expect(res).to.have.cookie('rack.session');
-                    var cookie = res.headers['set-cookie'][0]
+                    var cookie = res.headers['set-cookie'][0];
                     rackSessionCookie = cookie.split('rack.session=').pop().split(';')[0];
                 })
         })
@@ -92,6 +94,7 @@ describe('The Internet website - ', () => {
             value: rackSessionCookie,
             path: '/',
             httpOnly: true,
+            expiry: '1844259240'
         });
 
         SecureAreaPage.open();

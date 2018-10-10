@@ -5,19 +5,19 @@ exports.config = {
     exclude: [],
     maxInstances: 10,
      capabilities: [
-        //  {
-        //     browserName: 'chrome',
-        //     // chromeOptions: {
-        //     //     args: ['--disable-gpu']
-        //     // }
-        //  },
-        {
-            browserName: 'firefox',
-            marionette: true,
-            "moz:firefoxOptions": {
-                "binary": "C:\\Program Files\\Mozilla Firefox\\firefox.exe"
-            }
-        }
+         {
+            browserName: 'chrome',
+            // chromeOptions: {
+            //     args: ['--disable-gpu']
+            // }
+         },
+        // {
+        //     browserName: 'firefox',
+        //     marionette: true,
+        //     "moz:firefoxOptions": {
+        //         "binary": "C:\\Program Files\\Mozilla Firefox\\firefox.exe"
+        //     }
+        // }
     ],
     sync: true,
     logLevel: 'verbose',
