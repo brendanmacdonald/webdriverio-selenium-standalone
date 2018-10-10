@@ -4,22 +4,24 @@ exports.config = {
     ],
     exclude: [],
     maxInstances: 10,
-    capabilities: [{
-            browserName: 'chrome',
-            chromeOptions: {
-                args: ['--disable-gpu']
-            }
-        },
+     capabilities: [
+        //  {
+        //     browserName: 'chrome',
+        //     // chromeOptions: {
+        //     //     args: ['--disable-gpu']
+        //     // }
+        //  },
         {
             browserName: 'firefox',
             marionette: true,
             "moz:firefoxOptions": {
                 "binary": "C:\\Program Files\\Mozilla Firefox\\firefox.exe"
-            },
+            }
         }
     ],
     sync: true,
-    logLevel: 'silent',
+    logLevel: 'verbose',
+    logDir: __dirname,
     coloredLogs: true,
     deprecationWarnings: true,
     bail: 0,
@@ -36,7 +38,8 @@ exports.config = {
     reporters: ['dot'],
     mochaOpts: {
         ui: 'bdd',
-        timeout: 30000
+        timeout: 30000,
+        compilers: ['js:babel-register']
     },
     before: function () {
         var chai = require('chai');

@@ -1,22 +1,24 @@
-let mixin = require('xmultiple');
-const Page = require('../page_objects/page');
+import Page from './page'
 
-class SecureAreaPage extends mixin(Page) {
+class SecureAreaPage extends Page {
 
     constructor() {
         super();
-      }
+    }
 
-      
-    get secureAreaDiv() { return browser.element('div#flash'); }
-    get logoutButton() { return browser.element('div#content a > i'); }
+
+    get secureAreaDiv() {
+        return browser.element('div#flash');
+    }
+    get logoutButton() {
+        return browser.element('div#content a > i');
+    }
+    get flash() {
+        return $('#flash')
+    }
 
     open() {
         super.open('secure')
-    }
-
-    verifyLoginSuccess() {
-        this.checkTextInFlash('You logged into a secure area!');
     }
 
     logout() {
@@ -24,4 +26,4 @@ class SecureAreaPage extends mixin(Page) {
     }
 }
 
-module.exports = new SecureAreaPage();
+export default new SecureAreaPage();

@@ -1,7 +1,6 @@
-let mixin = require('xmultiple');
-const Page = require('../page_objects/page');
-
-class LoginPage extends mixin(Page) {
+import Page from './page'
+var request = require("request");
+class LoginPage extends Page {
 
   constructor() {
     super();
@@ -10,7 +9,7 @@ class LoginPage extends mixin(Page) {
   get title() {
     return browser.element('//h2');
   }
-  
+
   get username() {
     return browser.element("//input[@name='username']");
   }
@@ -25,6 +24,10 @@ class LoginPage extends mixin(Page) {
 
   get loginDiv() {
     return browser.element('div#flash');
+  }
+
+  get flash() {
+    return $('#flash')
   }
 
   open() {
@@ -45,17 +48,16 @@ class LoginPage extends mixin(Page) {
     }
   }
 
-  login(username, password) {
+  enterLoginValues(username, password) {
     this.waitForloginPageToLoad();
     this.username.setValue(username);
     this.password.setValue(password);
+  }
+
+  clickLoginBtn() {
     this.loginButton.click();
     browser.pause(2000);
   }
-
-  verifyLoginBlocked() {
-    this.checkTextInFlash('You must login to view the secure area!');
-  }
 }
 
-module.exports = new LoginPage();
+export default new LoginPage();

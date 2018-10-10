@@ -9,10 +9,25 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "babel-preset-env": "^1.7.0",
+    "babel-register": "^6.26.0",
     "chai": "^4.2.0",
+    "chai-http": "^4.2.0",
     "wdio-mocha-framework": "^0.6.3",
     "wdio-selenium-standalone-service": "0.0.10",
     "webdriverio": "^4.13.2",
     "xmultiple": "^1.0.0"
+  },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "node": "current"
+          }
+        }
+      ]
+    ]
   }
 }
