@@ -1,10 +1,5 @@
 import LoginPage from '../page_objects/login.page';
 import SecureAreaPage from '../page_objects/secure.area.page';
-var chai = require('chai'),
-    chaiHttp = require('chai-http');
-chai.use(chaiHttp);
-
-var request = require('request');
 
 // Valid user
 const username = 'tomsmith';
@@ -12,13 +7,12 @@ const password = 'SuperSecretPassword!'
 
 // Flash messages
 const LOGIN_SUCCESS_MSG = 'You logged into a secure area!';
-const LOGOUT_SUCCESS_MSG = 'You logged out of the secure area!';
 const USERNAME_INVALID_MSG = 'Your username is invalid!';
 const PASSWORD_INVALID_MSG = 'Your password is invalid!';
 const MUST_LOGIN_MSG = 'You must login to view the secure area!';
 
 describe('The Internet website - ', () => {
-    xit('form authentication without Page Objects', () => {
+    it('form authentication without Page Objects', () => {
         browser.url('/login')
             .setValue('input#username', username)
             .setValue('input#password', password)
@@ -29,7 +23,7 @@ describe('The Internet website - ', () => {
         browser.click('div#content a > i');
     });
 
-    xit('can login with valid credentials', () => {
+    it('can login with valid credentials', () => {
         LoginPage.open();
         LoginPage.checkTitleText();
         LoginPage.enterLoginValues(username, password);
@@ -39,7 +33,7 @@ describe('The Internet website - ', () => {
         SecureAreaPage.flash.getText().should.contain(LOGIN_SUCCESS_MSG);
     });
 
-    xit('cannot login with an invalid username', () => {
+    it('cannot login with an invalid username', () => {
         LoginPage.open();
         LoginPage.checkTitleText();
         LoginPage.enterLoginValues('invalid', password);
@@ -49,7 +43,7 @@ describe('The Internet website - ', () => {
         LoginPage.flash.getText().should.contain(USERNAME_INVALID_MSG);
     });
 
-    xit('cannot login with an invalid password', () => {
+    it('cannot login with an invalid password', () => {
         LoginPage.open();
         LoginPage.checkTitleText();
         LoginPage.enterLoginValues(username, 'invalid');
@@ -59,7 +53,7 @@ describe('The Internet website - ', () => {
         LoginPage.flash.getText().should.contain(PASSWORD_INVALID_MSG);
     });
 
-    xit('cannot access Secure Area without logging in', () => {
+    it('cannot access Secure Area without logging in', () => {
         SecureAreaPage.open();
         SecureAreaPage.logout();
         SecureAreaPage.open();
@@ -68,99 +62,88 @@ describe('The Internet website - ', () => {
         SecureAreaPage.flash.getText().should.contain(MUST_LOGIN_MSG);
     })
 
-    it('can log out', () => {
+    it('Set cookie version 1', () => {
 
-        var rackCookie = '';
-        var rackSessionValue = '';
-        LoginPage.open();
+        browser.url('http://testing-ground.scraping.pro/login');
 
-        browser.call(() => {
-            return chai.request.agent('https://the-internet.herokuapp.com')
-                .post('/authenticate')
+        browser.call(async () => {
+            return chai.request.agent('http://testing-ground.scraping.pro')
+                .post('/login?mode=login')
                 .set('content-type', 'application/x-www-form-urlencoded')
                 .send({
-                    username: 'tomsmith',
-                    password: 'SuperSecretPassword!'
+                    usr: 'admin',
+                    pwd: '12345',
+                    mode: 'login'
                 })
                 .then((res) => {
-                    console.log(res)
-                    expect(res).to.have.cookie('rack.session');
-                    rackCookie = res.headers['set-cookie'][0];
-                    rackSessionValue = rackCookie.split('rack.session=').pop().split(';')[0];
-                    console.log('***' + rackSessionValue);
+                    expect(res).to.have.status(200);
                 })
         })
 
-        browser.pause(10000) // wait for 10s to give me time to open chrome dev tools.
-
-        // *** FIRST APPROACH TO SET COOKIE
+        // Set the cookie.
         browser.setCookie({
-            name: 'rack.session',
-            value: rackSessionValue,
-             httpOnly: true,
-             secure: false, 
+            name: 'tdsess',
+            value: 'TEST_DRIVE_SESSION',
+            domain: 'testing-ground.scraping.pro',
+            path: '/'
         });
 
-        // *** SECOND APPROACH TO SET COOKIE
-        // browser.cookie('post', {
-        //     name: 'rack.session',
-        //     value: rackSessionValue,
-        //     httpOnly: true,
-        //     //secure: false,
-        // });
-
-        // *** THIRD APPROACH TO SET COOKIE
-        //browser.execute("document.cookie = " + rackCookie)
-
-        // LOG OUT THE COOKIES
-        var cookies = browser.getCookie();
-        console.log('#####' + JSON.stringify(cookies));
-
-        //    browser.refresh();
-        //    browser.refresh();
-        SecureAreaPage.open();
-        browser.pause(2000);
-        SecureAreaPage.logout();
-
-        // LoginPage.flash.waitForVisible();
-        // LoginPage.flash.getText().should.contain(LOGOUT_SUCCESS_MSG);
+        browser.url('http://testing-ground.scraping.pro/login?mode=welcome');
+        expect(browser.getUrl()).to.contain.path('?mode=welcome');
+        expect(browser.getText('#case_login')).to.contain('WELCOME :)');
     })
 
-    xit('can log out', () => {
+    it('Set cookie version 2', () => {
 
-        var rackSessionCookie = '';
-        LoginPage.open();
+        browser.url('http://testing-ground.scraping.pro/login');
 
-        browser.call(() => {
-            request.post({
-                url: 'https://the-internet.herokuapp.com/authenticate',
-                form: {
-                    key: 'tomsmith',
-                    password: 'SuperSecretPassword!'
-                }
-            }, function (err, res, body) {
-                expect(res).to.have.cookie('rack.session');
-                var cookie = res.headers['set-cookie'][0];
-                rackSessionCookie = cookie.split('rack.session=').pop().split(';')[0];
-            })
+        browser.call(async () => {
+            return chai.request.agent('http://testing-ground.scraping.pro')
+                .post('/login?mode=login')
+                .set('content-type', 'application/x-www-form-urlencoded')
+                .send({
+                    usr: 'admin',
+                    pwd: '12345',
+                    mode: 'login'
+                })
+                .then((res) => {
+                    expect(res).to.have.status(200);
+                })
         })
-        browser.url('/login');
-        browser.setCookie({
-            name: 'rack.session',
-            value: rackSessionCookie,
-            domain: '.the-internet.herokuapp.com'
+
+        // Set the cookie.
+        browser.cookie('post', {
+            name: 'tdsess',
+            value: 'TEST_DRIVE_SESSION',
+            domain: 'testing-ground.scraping.pro',
+            path: '/'
         });
 
-        // browser.cookie('post', {
-        //     name: 'rack.session',
-        //     value: rackSessionCookie,
-        //     path: '/',
-        //     domain: '.the-internet.herokuapp.com',
-        //     secure: true
-        // });
+        browser.url('http://testing-ground.scraping.pro/login?mode=welcome');
+        expect(browser.getUrl()).to.contain.path('?mode=welcome');
+        expect(browser.getText('#case_login')).to.contain('WELCOME :)');
+    })
 
-        SecureAreaPage.open();
-        browser.pause(50000);
-        SecureAreaPage.logout();
+    it('Cookie not set - fails to login', () => {
+
+        browser.url('http://testing-ground.scraping.pro/login');
+
+        browser.call(async () => {
+            return chai.request.agent('http://testing-ground.scraping.pro')
+                .post('/login?mode=login')
+                .set('content-type', 'application/x-www-form-urlencoded')
+                .send({
+                    usr: 'admin',
+                    pwd: '12345',
+                    mode: 'login'
+                })
+                .then((res) => {
+                    expect(res).to.have.status(200);
+                })
+        })
+
+        browser.url('http://testing-ground.scraping.pro/login?mode=welcome');
+        expect(browser.getUrl()).to.contain.path('?mode=welcome');
+        expect(browser.getText('#case_login')).to.contain('THE SESSION COOKIE IS MISSING OR HAS A WRONG VALUE!');
     })
 });

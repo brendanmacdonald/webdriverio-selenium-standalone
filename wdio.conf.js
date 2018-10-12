@@ -7,9 +7,9 @@ exports.config = {
      capabilities: [
          {
             browserName: 'chrome',
-            // chromeOptions: {
-            //     args: ['--disable-gpu']
-            // }
+            chromeOptions: {
+                args: ['--headless']
+            }
          },
         // {
         //     browserName: 'firefox',
@@ -43,7 +43,14 @@ exports.config = {
     },
     before: function () {
         var chai = require('chai');
+        global.chai = chai;
         global.expect = chai.expect;
         chai.should();
+
+        var chaiHttp = require('chai-http');
+        chai.use(chaiHttp);
+
+        var chaiURL = require('chai-url');
+        chai.use(chaiURL);
     }
 }

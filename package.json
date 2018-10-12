@@ -12,6 +12,7 @@
     "babel-register": "^6.26.0",
     "chai": "^4.2.0",
     "chai-http": "^4.2.0",
+    "chai-url": "^1.0.4",
     "wdio-mocha-framework": "^0.6.3",
     "wdio-selenium-standalone-service": "0.0.10",
     "webdriverio": "^4.13.2",
