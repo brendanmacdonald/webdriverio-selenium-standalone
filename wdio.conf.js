@@ -26,7 +26,7 @@ exports.config = {
     deprecationWarnings: true,
     bail: 0,
     screenshotPath: './errorShots/',
-    baseUrl: 'https://the-internet.herokuapp.com/',
+    baseUrl: 'https://the-internet.herokuapp.com',
     waitforTimeout: 10000, // Default timeout for all waitFor* commands.
     connectionRetryTimeout: 90000,
     connectionRetryCount: 3,
